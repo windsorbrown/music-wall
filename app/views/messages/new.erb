@@ -1,0 +1,39 @@
+
+
+<div class="jumbotron">
+ <p></p>
+ <p></p>
+ <p></p><% if @message && @message.errors.any? %>
+  <div>
+    <strong>Some issues with your message, please fix them:</strong>
+    <ul>
+      <% @message.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+    
+<form method="POST" action='/messages'>
+      <div class="form-group">
+    <div>
+    <label>Title:</label>
+    <input class="form-control" type="text" name="title" value="<%= @message && @message.title%>">
+  </div>
+  <div>
+    <label>Artist :</label>
+       <input class="form-control" type="text" name="author" value="<%= @message && @message.author %>">
+  </div>
+   <div>
+    <label>Url:</label>
+    <input class="form-control" type="text" name="url" value="<%= @message && @message.url%>">
+  </div>
+  <div>
+    <p><br /> <button  type="submit" class="btn btn-lg btn-success">Submit</button></p>
+       </div>
+  </div>
+      </div>
+</form>
+
+</div>
+</div>

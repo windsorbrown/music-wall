@@ -1,0 +1,34 @@
+
+
+      <div class="jumbotron">
+        <h1>MY SONG WALL</h1>
+        <% if session[:user_id] %><% user = User.find(session[:user_id])%> </p> <h2>Welcome back  <%= user.email %></h2>    
+        <a href ='/messages/logout'><button type="submit" class="btn btn-success">Logout</button> </a><%end%> <p>
+        <p class="lead">The best songs by the people for the people.</p>
+        <p><a class="btn btn-lg btn-success" href="/messages/new" role="button">Enter your song to the wall</a></p>
+      </div>
+ 
+
+
+      <div class="row marketing">
+      <% @messages.each do |message| %>
+        <div class="col-lg-6">
+         <h1> <a href="/messages/<%= message.id %>"><%= message.title %></a> </h1> <p>Total Votes <%= message.upvotes.nil? ? 0 : message.upvotes%>
+        <a href ='/messages/upvote'> <button type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-thumbs-up"></span> Vote For me
+        </button></a>
+      </p>
+          <a href="/messages/author/<%= message.author%>">(by: <%= message.author %>)</a>
+          <div class="embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" src="<%= message.url%>"></iframe>
+        </div>
+       </div>
+      <% end %>
+
+      <footer class="footer">
+
+      </footer>
+
+    </div>
+
+

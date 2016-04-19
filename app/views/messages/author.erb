@@ -1,0 +1,11 @@
+<p></p>
+<p></p>
+<% @message_author.each do |message| %>
+  <div class="jumbotron">
+  <div class="container">
+    <h3><a href="<% $base_url %>/messages/<%= message.id %>"><%= message.title %></a><p><small>(by: <a href="<% $base_url %>/messages/author/<%= message.author %>"><%= message.author %></a>)</small></p></h3>
+    <iframe class="embed-responsive-item" src="<%= message.url%>"></iframe>
+  </div>
+
+</div> <% end %>
+<a href="/messages/new">Post a message... It's FREE (for now)!</a>
