@@ -2,8 +2,8 @@
 
       <div class="jumbotron">
         <h1>MY SONG WALL</h1>
-        <% if session[:user_id] %><% user = User.find(session[:user_id])%> </p> <h2>Welcome back  <%= user.email %></h2>    
-        <a href ='/messages/logout'><button type="submit" class="btn btn-success">Logout</button> </a><%end%> <p>
+        <% if @current_user %> <p> <h2>Welcome back  <%= @current_user.email %> </h2>
+        <a href ='/messages/logout'><button type="submit" class="btn btn-success">Logout</button> </a></p><%end%> 
         <p class="lead">The best songs by the people for the people.</p>
         <p><a class="btn btn-lg btn-success" href="/messages/new" role="button">Enter your song to the wall</a></p>
       </div>
@@ -13,11 +13,23 @@
       <div class="row marketing">
       <% @messages.each do |message| %>
         <div class="col-lg-6">
-         <h1> <a href="/messages/<%= message.id %>"><%= message.title %></a> </h1> <p>Total Votes <%= message.upvotes.nil? ? 0 : message.upvotes%>
-        <a href ='/messages/upvote'> <button type="button" class="btn btn-default btn-sm">
+         <h1> <a href="/messages/<%= message.id %>"><%= message.title %></a> </h1> <p>Total Votes <%= message.total_upvotes%>    </p>
+        <% if @current_user
+                has_voted = Upvote.where(user_id: @current_user.id).where(message_id: message.id) 
+              end %>
+       <% if @current_user && has_voted.any? %>
+               <form> <button type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-thumbs-up"></span> Voted 
+        </button></form>
+          <% else %>
+
+        <form method="POST" action='/messages/upvote'> <input type="hidden" name="song_id" value ="<%= message.id %>"><button type="submit" class="btn btn-default btn-sm">
           <span class="glyphicon glyphicon-thumbs-up"></span> Vote For me
-        </button></a>
-      </p>
+        </button></form>
+          <%end%>
+
+
+  
           <a href="/messages/author/<%= message.author%>">(by: <%= message.author %>)</a>
           <div class="embed-responsive embed-responsive-16by9">
         <iframe class="embed-responsive-item" src="<%= message.url%>"></iframe>

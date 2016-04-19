@@ -1,4 +1,7 @@
-
+<% if @current_user 
+        has_reviewed = Review.where(user_id: @current_user.id).where(message_id: @message.id) 
+      end 
+  %>
 <p>
   Author: <%= @message.author %>
 </p>
@@ -12,7 +15,85 @@
   Created At <%= @message.created_at %>
 </p>
 <hr/>
+
+
+<% if @current_user  
+        if has_reviewed.any? %>
+          You have already reviewed
+  <%else %>
+<form method="POST" action='/messages/add_review'>
+      <div class="form-group">
+    <div>
+    <label>Add Your Review:</label>
+     <textarea class="form-control" name= "review" id="exampleTextarea" rows="3"></textarea>
+      <input type="hidden" name="song_id" value ="<%= @message.id %>">
+  </div>
+  <fieldset class="rating">
+    <legend>Please rate:</legend>
+    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="Rocks!">5 stars</label>
+    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Pretty good">4 stars</label>
+    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Meh">3 stars</label>
+    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kinda bad">2 stars</label>
+    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Sucks big time">1 star</label>
+</fieldset>
+    <div>
+    <p><br /> <button  type="submit" class="btn btn-lg btn-success">Submit</button></p>
+       </div>
+  </div>
+      </div>
+</form>
+  <% end %>
+  <% else %>
+  <div class="form-group">
+    Please signin to leave a review
+     <a href ='/messages/signin'><button type="submit" class="btn btn-success">Sign in</button> </a>
+  </div>
+<% end %>
+
+
 <a href="/messages">Back to All Messages</a>
+
+
+      <% @reviews.each do |review| %>
+        
+    
+        <div >
+         <h1> Author : <%= review.user_id %></h1>
+         <p><%= review.review_text %></p>
+     <fieldset class="rating">
+
+    <% if review.review_stars == 5 %><input type="radio" id="star<%=review.id%>" name="rating<%=review.id%>" value="5" checked/><label for="star<%=review.id%>" title="Rocks!">5 stars</label> <% else %> <input type="radio" id="star<%=review.id%>" name="rating<%=review.id%>" value="5" /><label for="star<%=review.id%>" title="Rocks!">5 stars</label><%end%>
+     
+     <% if review.review_stars == 4 %><input type="radio" id="star<%=review.id%>" name="rating<%=review.id%>" value="4" checked/><label for="star<%=review.id%>" title="Pretty good">4 stars</label><% else %> <input type="radio" id="star<%=review.id%>" name="rating<%=review.id%>" value="4" /><label for="star<%=review.id%>" title="Pretty good">4 stars</label><%end%> 
+     
+     <% if review.review_stars == 3 %><input type="radio" id="star<%=review.id%>" name="rating<%=review.id%>" value="3" checked/><label for="star<%=review.id%>" title="Meh">3 stars</label><% else %><input type="radio" id="star<%=review.id%>" name="rating<%=review.id%>" value="3" /><label for="star<%=review.id%>" title="Meh"> 3 stars</label><%end%>
+     
+     <% if review.review_stars == 2 %><input type="radio" id="star<%=review.id%>" name="rating<%=review.id%>" value="2" checked/><label for="star<%=review.id%>" title="Kinda bad">2 stars</label><% else %><input type="radio" id="star<%=review.id%>" name="rating<%=review.id%>" value="2" /><label for="star<%=review.id%>" title="Kinda bad">  2 stars</label><%end%>
+     
+     <% if review.review_stars == 1 %><input type="radio" id="star<%=review.id%>" name="rating<%=review.id%>" value="1" checked/><label for="star<%=review.id%>" title="Sucks big time">1 star</label><% else %>  <input type="radio" id="star<%=review.id%>" name="rating<%=review.id%>" value="1" /><label for="star<%=review.id%>" title="Sucks big time">1 star</label><%end%>
+    
+    </fieldset>
+          <% if @current_user && review.user_id == @current_user.id %>
+
+          <form action="/reviews/del_review" method="post">
+          
+          <input type="hidden" name="review_id" value="<%=review.id%>">
+           <input type="hidden" name="song_id" value="<%=@message.id%>">
+        
+          <button type="submit" class="btn btn-success">Delete</button>
+
+          </form>
+          
+          <%end%>
+
+         </div>
+             
+          <%end%>
+
+
+
+
+
 
 
 
